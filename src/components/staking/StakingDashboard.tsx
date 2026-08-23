@@ -10,7 +10,8 @@ import { YieldProjectionCalculator } from './YieldProjection';
 import { MultiAssetStakingForm } from './MultiAssetStakingForm';
 import { ComparisonTools } from './ComparisonTools';
 import { AssetDetailPage } from './AssetDetailPage';
-import { RefreshCw, Plus, BarChart3 } from 'lucide-react';
+import { EmergencyUnstakeModal } from './emergency';
+import { RefreshCw, Plus, BarChart3, AlertTriangle } from 'lucide-react';
 
 interface StakingDashboardProps {
   publicKey?: string;
@@ -36,6 +37,7 @@ export const StakingDashboard: React.FC<StakingDashboardProps> = ({ publicKey })
 
   const [showStakingForm, setShowStakingForm] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showEmergencyUnstake, setShowEmergencyUnstake] = useState(false);
 
   const fetchStakingData = async (refresh = false) => {
     if (!publicKey) return;
@@ -152,6 +154,14 @@ export const StakingDashboard: React.FC<StakingDashboardProps> = ({ publicKey })
             Refresh
           </button>
           <button
+            onClick={() => setShowEmergencyUnstake(true)}
+            data-testid="open-emergency-unstake"
+            className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
+          >
+            <AlertTriangle className="w-4 h-4" />
+            Emergency Unstake
+          </button>
+          <button
             onClick={() => setShowStakingForm(!showStakingForm)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
           >
@@ -160,6 +170,12 @@ export const StakingDashboard: React.FC<StakingDashboardProps> = ({ publicKey })
           </button>
         </div>
       </div>
+
+      <EmergencyUnstakeModal
+        open={showEmergencyUnstake}
+        onClose={() => setShowEmergencyUnstake(false)}
+        publicKey={publicKey}
+      />
 
       {errors.portfolio && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400">

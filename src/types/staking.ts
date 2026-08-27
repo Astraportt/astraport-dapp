@@ -222,3 +222,37 @@ export interface StakingStats {
   /** Total rewards distributed */
   totalRewardsDistributed: number;
 }
+
+/** ─── Emergency unstaking (issue #10) ──────────────────────────────────────── */
+
+/** Result of evaluating an emergency withdrawal against the penalty schedule */
+export interface EmergencyUnstakeQuote {
+  positionId: string;
+  assetCode: string;
+  /** Amount the user wants out, in asset units */
+  requestedAmount: number;
+  /** Current penalty percentage (0–100) applied to the withdrawn amount */
+  penaltyRate: number;
+  /** Value forfeited, in base currency */
+  penaltyAmount: number;
+  /** requestedAmount value minus penalty, in base currency */
+  netProceeds: number;
+  /** Value of the requested amount at current price, in base currency */
+  grossValue: number;
+  /** Days remaining until the lock-up ends and penalties disappear */
+  daysUntilUnlock: number;
+  quoteTimestamp: number;
+}
+
+/** A completed or in-flight emergency unstake, for history display */
+export interface EmergencyUnstakeRecord {
+  id: string;
+  positionId: string;
+  assetCode: string;
+  amount: string;
+  penaltyAmount: string;
+  netAmount: string;
+  status: 'pending' | 'completed' | 'failed';
+  txHash?: string;
+  timestamp: number;
+}

@@ -49,3 +49,71 @@ button {
     animation-delay: 500ms;
   }
 }
+
+/*
+ * Scroll-reveal: elements start hidden and slide up when the `is-revealed`
+ * class lands (added by the <Reveal> component via IntersectionObserver).
+ * Content stays in the DOM and readable without JS — the observer only
+ * decorates it — so this is safe for users without client-side JS.
+ */
+@layer components {
+  .reveal {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+ * Landing-page atmosphere: a very slow, low-contrast aurora that drifts behind
+ * the hero. Kept subtle so it reads as texture rather than a moving banner.
+ */
+.aurora {
+  background:
+    radial-gradient(45rem 30rem at 15% 10%, rgba(18, 198, 178, 0.16), transparent 60%),
+    radial-gradient(40rem 26rem at 85% 0%, rgba(15, 39, 71, 0.14), transparent 60%);
+}
+.dark .aurora {
+  background:
+    radial-gradient(45rem 30rem at 15% 10%, rgba(18, 198, 178, 0.12), transparent 60%),
+    radial-gradient(40rem 26rem at 85% 0%, rgba(45, 208, 191, 0.08), transparent 60%);
+}
+
+/* Slow drift for the aurora layer (disabled under reduced motion, below). */
+@keyframes aurora-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -2%, 0) scale(1.06);
+  }
+}
+.animate-aurora {
+  animation: aurora-drift 18s ease-in-out infinite;
+}
+
+/*
+ * Respect users who prefer reduced motion: reveal instantly, stop the marquee,
+ * freeze the floating orbs, the aurora and the animated gradient text.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-marquee,
+  .animate-float,
+  .animate-pulse-soft,
+  .animate-gradient,
+  .animate-aurora {
+    animation: none;
+  }
+}

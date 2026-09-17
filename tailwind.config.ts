@@ -28,7 +28,18 @@ const config: Config = {
           teal: '#12C6B2',
         },
       },
+      boxShadow: {
+        glow: '0 0 40px -12px rgba(18, 198, 178, 0.5)',
+      },
       keyframes: {
+        gradient: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
         'fade-in': {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
@@ -47,6 +58,8 @@ const config: Config = {
         },
       },
       animation: {
+        gradient: 'gradient 8s ease infinite',
+        marquee: 'marquee 32s linear infinite',
         // `forwards` keeps elements at their end state (opacity 1) after the
         // reveal, since they start from an `opacity-0` base class.
         'fade-in': 'fade-in 0.6s ease-out forwards',

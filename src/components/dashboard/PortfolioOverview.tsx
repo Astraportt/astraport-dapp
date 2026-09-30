@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { useWalletStore, useDashboardStore } from '@/store';
 import { usePortfolioData, useRiskScore } from '@/hooks/usePortfolio';
-import { StellarService } from '@/services/stellar';
 
 export const PortfolioOverview: React.FC = () => {
   const { account, portfolio: storePortfolio } = useWalletStore();

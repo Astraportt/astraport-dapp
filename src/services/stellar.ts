@@ -65,7 +65,7 @@ export class StellarService {
   /**
    * Create a Horizon server instance configured for the current network.
    */
-  private static getServer(): StellarSdk.Horizon.Server {
+  private static getServer(): InstanceType<typeof StellarSdk.Horizon.Server> {
     return new StellarSdk.Horizon.Server(HORIZON_URL, {
       allowHttp: false,
     });
@@ -92,7 +92,7 @@ export class StellarService {
     try {
       const account = await server.loadAccount(publicKey);
 
-      const balances: AccountBalance[] = account.balances.map((b) => ({
+      const balances: AccountBalance[] = account.balances.map((b: Record<string, unknown>) => ({
         asset_type: b.asset_type,
         asset_code: b.asset_code,
         asset_issuer: b.asset_issuer,
@@ -112,7 +112,7 @@ export class StellarService {
           med_threshold: account.thresholds.med_threshold,
           high_threshold: account.thresholds.high_threshold,
         },
-        signers: account.signers.map((s) => ({
+        signers: account.signers.map((s: Record<string, unknown>) => ({
           key: s.key,
           weight: s.weight,
           type: s.type,
@@ -133,13 +133,15 @@ export class StellarService {
         );
       }
       if (error instanceof StellarSdk.NetworkError) {
+        const msg = error instanceof Error ? error.message : 'Unknown network error';
         throw new Error(
-          `Network error while connecting to Horizon: ${error.message}. Please check your connection and try again.`,
+          `Network error while connecting to Horizon: ${msg}. Please check your connection and try again.`,
         );
       }
       if (error instanceof StellarSdk.BadResponseError) {
+        const msg = error instanceof Error ? error.message : 'Unknown server error';
         throw new Error(
-          `Horizon server returned an error: ${error.message}. The server may be rate-limiting requests.`,
+          `Horizon server returned an error: ${msg}. The server may be rate-limiting requests.`,
         );
       }
       if (error instanceof Error) {
